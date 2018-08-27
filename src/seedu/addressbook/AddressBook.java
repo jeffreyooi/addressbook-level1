@@ -608,8 +608,19 @@ public class AddressBook {
     }
 
     private static String[] splitEditDataArgsValue(String args) {
-        final String matchPrefixRegex = PERSON_DATA_PREFIX_PHONE + '|' + PERSON_DATA_PREFIX_EMAIL;
-        return args.trim().split(matchPrefixRegex);
+        String[] splitArgs = args.trim().split(" ");
+        splitArgs[0] = extractNameFromPersonString(args);
+        if (splitArgs[1].contains(PERSON_DATA_PREFIX_EMAIL))
+            splitArgs[1] = removePrefixSign(splitArgs[1], PERSON_DATA_PREFIX_EMAIL);
+        else
+            splitArgs[1] = removePrefixSign(splitArgs[1], PERSON_DATA_PREFIX_PHONE);
+        if (splitArgs.length == 3) {
+            if (splitArgs[2].contains(PERSON_DATA_PREFIX_EMAIL))
+                splitArgs[2] = removePrefixSign(splitArgs[2], PERSON_DATA_PREFIX_EMAIL);
+            else
+                splitArgs[2] = removePrefixSign(splitArgs[2], PERSON_DATA_PREFIX_PHONE);
+        }
+        return splitArgs;
     }
 
     private static int extractTargetIndexFromEditPersonArgs(String rawArgs) {
